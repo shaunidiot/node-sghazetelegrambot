@@ -32,7 +32,7 @@ var image = function() {
         var args = util.parseCommand(msg.text, ["subscribe", "help", "unsubscribe", "areas"]);
 
         if (args) {
-            
+
         }
         console.log('Haze: ' + msg.text.toLowerCase());
         if (msg.text.toLowerCase() == "haze") {
@@ -59,6 +59,7 @@ var image = function() {
             });
         }
     };
+    n
 }
 
 module.exports = image;
