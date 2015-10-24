@@ -3,3 +3,5 @@ node_modules/
 files/tmp/*
 files/*
 setup.sh
+config.js
+data/

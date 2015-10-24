@@ -1,0 +1,7 @@
+var config = {};
+
+config.telegramToken = process.env.TELEGRAM_TOKEN || "125138198:AAGbvCK7Sp192G_x5mcXLZIfhN_GnQeIrDE";
+
+config.activePlugins = ["areas","help", "unsubscribe", "subscribe"];
+
+module.exports = config;

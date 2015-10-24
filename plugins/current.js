@@ -3,7 +3,7 @@ var util = require('./../util');
 var image = function() {
 
     this.init = function() {
-        console.log('[Plugin] areas loaded.');
+        console.log('[Plugin] current loaded');
     };
 
     this.doStop = function(done) {
@@ -11,13 +11,10 @@ var image = function() {
     };
 
     this.doMessage = function(msg, reply) {
-        var args = util.parseCommand(msg.text, ["areas", "area"]);
+        var args = util.parseCommand(msg.text, ["current"]);
 
         if (args) {
-            reply({
-                type: "text",
-                text: 'Areas included: \nnorth\nsouth\neast\nwest\noverall'
-            });
+
         }
     };
 }
