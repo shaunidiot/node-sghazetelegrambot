@@ -22,7 +22,6 @@ var image = function() {
 
         if (args) {
             client.hgetall('subscriptions', function(err, results) {
-                console.log(results);
                 if (!err) {
                     var id = msg.chat.id;
                     if (results != null && typeof results[id] !== 'undefined') {
@@ -49,11 +48,11 @@ var image = function() {
                                 message += '\nOverall: ' + threshold;
                                 break;
                             }
-                            reply({
-                                type: "text",
-                                text: message
-                            });
                         }
+                        reply({
+                            type: "text",
+                            text: message
+                        });
                     } else {
                         reply({
                             type: "text",

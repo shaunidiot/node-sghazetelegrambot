@@ -4,6 +4,7 @@ var fs = require('fs');
 var moment = require('moment');
 
 var async = require('async');
+var CronJob = require('cron').CronJob;
 
 var PluginManager = require('./plugins');
 var plugins = new PluginManager();
@@ -57,6 +58,8 @@ bot.on('message', function(msg) {
 
 function processSub(data, chatID, chatSub) {
     var area;
+    var message = 'PSI Updates:\n';
+    var overallDate = '';
     for (area in chatSub) {
         var threshold = chatSub[area];
         var value, date;
@@ -83,8 +86,13 @@ function processSub(data, chatID, chatSub) {
             break;
         }
         if (value >= threshold) {
-            bot.sendMessage(chatID, 'PSI Update for ' + area + " : " + value + "\n\nAs of " + date);
+            message += '\n' + area + " : " + value;
+            overallDate = moment(data[1].timestamp).format("YYYY-MM-DD HH:mm");
         }
+    }
+    if (message.length > 0) {
+        message += "\n\nAs of " + overallDate;
+        bot.sendMessage(chatID, message);
     }
 }
 
@@ -92,19 +100,20 @@ function sendNewUpdates() {
     fs.readFile('./data/haze.json', 'utf8', function (err,data) {
         if (err) {
             return console.log(err);
-        }
-        var haze = JSON.parse(data);
-        client.hgetall('subscriptions', function(err, results) {
-            if (!err) {
-                var chatID;
-                for (chatID in results) {
-                    var chatSub = JSON.parse(results[chatID]);
-                    processSub(haze, chatID, chatSub);
+        } else {
+            var haze = JSON.parse(data);
+            client.hgetall('subscriptions', function(err, results) {
+                if (!err) {
+                    var chatID;
+                    for (chatID in results) {
+                        var chatSub = JSON.parse(results[chatID]);
+                        processSub(haze, chatID, chatSub);
+                    }
+                } else {
+                    console.log(err);
                 }
-            } else {
-                console.log(err);
-            }
-        });
+            });
+        }
     });
 }
 
@@ -114,11 +123,9 @@ function fetchNewHazeData() {
             fs.writeFile("./data/haze.json", JSON.stringify(data), function(err) {
                 if(err) {
                     return console.log(err);
+                } else {
+                    console.log("[fetchNewHazeData] The file was saved!");
                 }
-                console.log("[fetchNewHazeData] The file was saved!");
-
-                //temp
-                sendNewUpdates();
             });
         } else {
             console.log('[fetchNewHazeData]: ' + error);
@@ -126,9 +133,19 @@ function fetchNewHazeData() {
     });
 }
 
-setInterval(function(){
+new CronJob('*/30 * * * *', function() {
+    console.log('[cron] Fetching new haze data.');
     fetchNewHazeData();
-}, 5000);
+}, null, true, 'Asia/Singapore');
+
+new CronJob('0 * * * *', function() {
+    console.log('[cron] Sending updates to users.');
+    sendNewUpdates();
+}, null, true, 'Asia/Singapore');
+
+//setInterval(function(){
+//fetchNewHazeData();
+//}, 5000);
 
 // If `CTRL+C` is pressed we stop the bot safely.
 process.on('SIGINT', shutDown);
