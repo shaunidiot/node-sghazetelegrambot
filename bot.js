@@ -66,28 +66,32 @@ function processSub(data, chatID, chatSub) {
         switch (area) {
             case 'north':
             value = data[0].value;
-            date = moment(data[0].timestamp).format("YYYY-MM-DD HH:mm");
+            date = moment(data[0].timestamp).format("DD/MM/YYYY HH:mm");
             break;
             case 'south':
-            value = data[5].value;
-            date = moment(data[5].timestamp).format("YYYY-MM-DD HH:mm");
+            value = data[1].value;
+            date = moment(data[5].timestamp).format("DD/MM/YYYY HH:mm");
             break;
             case 'east':
-            value = data[3].value;
-            date = moment(data[3].timestamp).format("YYYY-MM-DD HH:mm");
+            value = data[2].value;
+            date = moment(data[3].timestamp).format("DD/MM/YYYY HH:mm");
             break;
             case 'west':
+            value = data[3].value;
+            date = moment(data[4].timestamp).format("DD/MM/YYYY HH:mm");
+            break;
+            case 'central':
             value = data[4].value;
-            date = moment(data[4].timestamp).format("YYYY-MM-DD HH:mm");
+            date = moment(data[4].timestamp).format("DD/MM/YYYY HH:mm");
             break;
             case 'overall':
-            value = data[1].value;
-            date = moment(data[1].timestamp).format("YYYY-MM-DD HH:mm");
+            value = data[5].value;
+            date = moment(data[1].timestamp).format("DD/MM/YYYY HH:mm");
             break;
         }
         if (value >= threshold) {
             message += '\n' + area + " : " + value;
-            overallDate = moment(data[1].timestamp).format("YYYY-MM-DD HH:mm");
+            overallDate = moment(data[1].timestamp).format("DD/MM/YYYY HH:mm");
         }
     }
     if (message.length > 0) {
@@ -142,10 +146,6 @@ new CronJob('0 * * * *', function() {
     console.log('[cron] Sending updates to users.');
     sendNewUpdates();
 }, null, true, 'Asia/Singapore');
-
-//setInterval(function(){
-//fetchNewHazeData();
-//}, 5000);
 
 // If `CTRL+C` is pressed we stop the bot safely.
 process.on('SIGINT', shutDown);

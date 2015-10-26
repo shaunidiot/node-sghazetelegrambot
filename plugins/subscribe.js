@@ -32,6 +32,7 @@ var image = function() {
                     case 'south':
                     case 'east':
                     case 'west':
+                    case 'central':
                     case 'overall':
                     client.hget("subscriptions", msg.chat.id, function(err, result) {
                         if (err) {

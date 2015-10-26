@@ -16,7 +16,7 @@ var image = function() {
         if (args) {
             reply({
                 type: "text",
-                text: 'Areas included: \nnorth\nsouth\neast\nwest\noverall'
+                text: 'Areas included: \nnorth\nsouth\neast\nwest\ncentral\noverall'
             });
         }
     };

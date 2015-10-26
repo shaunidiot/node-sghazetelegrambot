@@ -29,7 +29,7 @@ var image = function() {
                             haze.forEach(function(element, index, array) {
                                 message += '\n' + element.name + ': ' + element.value;
                             });
-                            message += '\n\nAs of ' + moment(haze[1].timestamp).format("YYYY-MM-DD HH:mm");
+                            message += '\n\nAs of ' + moment(haze[1].timestamp).format("DD/MM/YYYY HH:mm");
                             reply({
                                 type: "text",
                                 text: message
@@ -49,7 +49,7 @@ var image = function() {
                                     haze.forEach(function(element, index, array) {
                                         message += '\n' + element.name + ': ' + element.value;
                                     });
-                                    message += '\n\nAs of ' + moment(haze[1].timestamp).format("YYYY-MM-DD HH:mm");
+                                    message += '\n\nAs of ' + moment(haze[1].timestamp).format("DD/MM/YYYY HH:mm");
                                     reply({
                                         type: "text",
                                         text: message

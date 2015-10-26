@@ -11,7 +11,7 @@ var image = function() {
     };
 
     this.doMessage = function(msg, reply) {
-        var args = util.parseCommand(msg.text, ["help"]);
+        var args = util.parseCommand(msg.text, ["help", "start"]);
 
         if (args) {
             reply({
