@@ -118,7 +118,7 @@ function sendNewUpdates() {
 }
 
 function fetchNewHazeData() {
-    haze.retrieveData('781CF461BB6606ADBC7C75BF9D4F60DB336AE43A696D2568', function(error, data) {
+    haze.retrieveDataLegacy(function(error, data) {
         if (!error) {
             fs.writeFile("./data/haze.json", JSON.stringify(data), function(err) {
                 if(err) {
