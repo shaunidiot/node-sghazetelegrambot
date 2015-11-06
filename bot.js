@@ -17,9 +17,9 @@ var bot = new TelegramBot(token, {
 var haze = require('node-sghaze');
 
 var redis = require("redis"),
-client = redis.createClient();
+    client = redis.createClient();
 
-client.select(3, function() { });
+client.select(3, function() {});
 
 client.on("error", function(err) {
     console.log("[redis] Error " + err);
@@ -38,19 +38,19 @@ bot.on('message', function(msg) {
         plugins.doMessage(msg, function(reply) {
             switch (reply.type) {
                 case "text":
-                bot.sendMessage(chatId, reply.text);
-                break;
+                    bot.sendMessage(chatId, reply.text);
+                    break;
                 case "audio":
-                bot.sendAudio(chatId, reply.audio);
-                break;
+                    bot.sendAudio(chatId, reply.audio);
+                    break;
                 case "photo":
-                bot.sendPhoto(chatId, reply.photo);
-                break;
+                    bot.sendPhoto(chatId, reply.photo);
+                    break;
                 case "status":
-                bot.sendChatAction(chatId, reply.status);
-                break;
+                    bot.sendChatAction(chatId, reply.status);
+                    break;
                 default:
-                console.log("Error: Unrecognized response");
+                    console.log("Error: Unrecognized response");
             }
         });
     }
@@ -65,29 +65,29 @@ function processSub(data, chatID, chatSub) {
         var value, date;
         switch (area) {
             case 'north':
-            value = data[0].value;
-            date = moment(data[0].timestamp).format("DD/MM/YYYY HH:mm");
-            break;
+                value = data[0].value;
+                date = moment(data[0].timestamp).format("DD/MM/YYYY HH:mm");
+                break;
             case 'south':
-            value = data[1].value;
-            date = moment(data[5].timestamp).format("DD/MM/YYYY HH:mm");
-            break;
+                value = data[1].value;
+                date = moment(data[5].timestamp).format("DD/MM/YYYY HH:mm");
+                break;
             case 'east':
-            value = data[2].value;
-            date = moment(data[3].timestamp).format("DD/MM/YYYY HH:mm");
-            break;
+                value = data[2].value;
+                date = moment(data[3].timestamp).format("DD/MM/YYYY HH:mm");
+                break;
             case 'west':
-            value = data[3].value;
-            date = moment(data[4].timestamp).format("DD/MM/YYYY HH:mm");
-            break;
+                value = data[3].value;
+                date = moment(data[4].timestamp).format("DD/MM/YYYY HH:mm");
+                break;
             case 'central':
-            value = data[4].value;
-            date = moment(data[4].timestamp).format("DD/MM/YYYY HH:mm");
-            break;
+                value = data[4].value;
+                date = moment(data[4].timestamp).format("DD/MM/YYYY HH:mm");
+                break;
             case 'overall':
-            value = data[5].value;
-            date = moment(data[1].timestamp).format("DD/MM/YYYY HH:mm");
-            break;
+                value = data[5].value;
+                date = moment(data[1].timestamp).format("DD/MM/YYYY HH:mm");
+                break;
         }
         if (value >= threshold) {
             message += '\n' + area + " : " + value;
@@ -101,10 +101,11 @@ function processSub(data, chatID, chatSub) {
 }
 
 function sendNewUpdates() {
-    fs.readFile('./data/haze.json', 'utf8', function (err,data) {
+    fs.readFile('./data/haze.json', 'utf8', function(err, data) {
         if (err) {
             return console.log(err);
-        } else {
+        }
+        else {
             var haze = JSON.parse(data);
             client.hgetall('subscriptions', function(err, results) {
                 if (!err) {
@@ -113,7 +114,8 @@ function sendNewUpdates() {
                         var chatSub = JSON.parse(results[chatID]);
                         processSub(haze, chatID, chatSub);
                     }
-                } else {
+                }
+                else {
                     console.log(err);
                 }
             });
@@ -125,14 +127,33 @@ function fetchNewHazeData() {
     haze.retrieveDataLegacy(function(error, data) {
         if (!error) {
             fs.writeFile("./data/haze.json", JSON.stringify(data), function(err) {
-                if(err) {
+                if (err) {
                     return console.log(err);
-                } else {
+                }
+                else {
                     console.log("[fetchNewHazeData] The file was saved!");
                 }
             });
-        } else {
+        }
+        else {
             console.log('[fetchNewHazeData]: ' + error);
+        }
+    });
+}
+
+function isUseMuted(chatId, callback) {
+    var currentTime = moment().format('HHMM');
+    client.hgetall('mutes', function(err, results) {
+        if (!err) {
+            var chatID;
+            for (chatID in results) {
+                var timesub = JSON.parse(results[chatID]);
+                var startTime = timesub['start'];
+                var endTime = timesub['end'];
+            }
+        }
+        else {
+            console.log(err);
         }
     });
 }
